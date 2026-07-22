@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de nomenclatura — QTS Project Rhodes (ESP1)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg:#12151A;
+  --panel:#1A1F27;
+  --panel-2:#20262F;
+  --line:#2C333D;
+  --line-soft:#232933;
+  --text:#ECEEF1;
+  --text-dim:#8B93A1;
+  --text-faint:#5B6472;
+  --accent:#E14B32;
+  --accent-dim:#7A3226;
+  --accent-glow: rgba(225,75,50,0.18);
+  --blue:#5EC1D6;
+  --amber:#E0A93E;
+  --teal:#4FB6A0;
+  --violet:#9C8CF0;
+  --green:#6FBF73;
+  --grey:#9AA2AF;
+
+  --f-campus:#9AA2AF;
+  --f-facility:#9AA2AF;
+  --f-zone:#E0A93E;
+  --f-level:#4FB6A0;
+  --f-info:#9C8CF0;
+  --f-disc:#E14B32;
+  --f-doctype:#5EC1D6;
+  --f-number:#6FBF73;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(ellipse 1200px 600px at 15% -10%, rgba(225,75,50,0.06), transparent 60%),
+    radial-gradient(ellipse 900px 500px at 100% 0%, rgba(94,193,214,0.05), transparent 55%),
+    var(--bg);
+  color:var(--text);
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--accent);color:#12151A;}
+:focus-visible{outline:2px solid var(--blue); outline-offset:2px; border-radius:4px;}
+
+.wrap{max-width:1180px;margin:0 auto;padding:44px 24px 90px;}
+
+/* ---------- Header ---------- */
+header{
+  display:flex; flex-wrap:wrap; gap:24px; justify-content:space-between; align-items:flex-end;
+  border-bottom:1px solid var(--line);
+  padding-bottom:26px; margin-bottom:34px;
+}
+.brand-eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.14em;
+  color:var(--accent); text-transform:uppercase; margin-bottom:10px; display:flex; align-items:center; gap:10px;
+}
+.brand-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);}
+h1{font-size:clamp(26px,3.4vw,38px); font-weight:700; margin:0 0 6px; letter-spacing:-0.01em; line-height:1.08;}
+.subtitle{color:var(--text-dim); font-size:14.5px; max-width:640px; line-height:1.5;}
+.ref-box{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--text-faint);
+  border:1px solid var(--line); border-radius:8px; padding:12px 16px; text-align:right;
+  min-width:230px; line-height:1.7;
+}
+.ref-box b{color:var(--text-dim); font-weight:600;}
+
+/* ---------- Mode toggle ---------- */
+.mode-row{display:flex; gap:10px; margin-bottom:28px; flex-wrap:wrap;}
+.mode-btn{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.03em;
+  background:var(--panel); border:1px solid var(--line); color:var(--text-dim);
+  padding:10px 16px; border-radius:8px; cursor:pointer; transition:.15s ease;
+}
+.mode-btn:hover{border-color:var(--text-faint); color:var(--text);}
+.mode-btn.active{background:var(--accent-glow); border-color:var(--accent); color:var(--text);}
+
+/* ---------- Layout ---------- */
+.layout{display:grid; grid-template-columns: 1.15fr 0.85fr; gap:26px; align-items:start;}
+@media (max-width:920px){ .layout{grid-template-columns:1fr;} }
+
+/* ---------- Field panel ---------- */
+.panel{
+  background:var(--panel); border:1px solid var(--line); border-radius:14px;
+  padding:26px;
+}
+.panel-title{
+  font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--text-faint); margin-bottom:20px; display:flex; align-items:center; gap:10px;
+}
+.panel-title::after{content:""; flex:1; height:1px; background:var(--line);}
+
+.field{margin-bottom:18px;}
+.field:last-child{margin-bottom:0;}
+.field-label{
+  display:flex; align-items:center; gap:9px; margin-bottom:7px;
+}
+.field-num{
+  font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700;
+  width:20px; height:20px; border-radius:5px; display:flex; align-items:center; justify-content:center;
+  color:#12151A; flex-shrink:0;
+}
+.field-name{font-size:13.5px; font-weight:600; color:var(--text);}
+.field-hint{font-size:11.5px; color:var(--text-faint); margin-left:29px; margin-top:-3px; margin-bottom:6px; line-height:1.4;}
+
+select, input[type="text"]{
+  width:100%; background:var(--panel-2); border:1px solid var(--line); color:var(--text);
+  font-family:'JetBrains Mono',monospace; font-size:13.5px; padding:10px 12px; border-radius:8px;
+  appearance:none; cursor:pointer; transition:.15s ease;
+}
+select:hover, input[type="text"]:hover{border-color:var(--text-faint);}
+select:focus, input[type="text"]:focus{border-color:var(--blue);}
+input[type="text"]{cursor:text;}
+.select-wrap{position:relative;}
+.select-wrap::after{
+  content:"▾"; position:absolute; right:12px; top:50%; transform:translateY(-50%);
+  color:var(--text-faint); pointer-events:none; font-size:11px;
+}
+.field-warn{
+  font-size:11px; color:var(--amber); margin-left:29px; margin-top:6px; line-height:1.4;
+  display:none;
+}
+.field-warn.show{display:block;}
+
+/* ---------- Output panel (sticky) ---------- */
+.output-col{position:sticky; top:24px; display:flex; flex-direction:column; gap:18px;}
+
+.stamp{
+  background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:26px;
+  position:relative; overflow:hidden;
+}
+.stamp::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background-image: linear-gradient(var(--line-soft) 1px, transparent 1px), linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+  background-size:14px 14px; opacity:.35;
+}
+.stamp-inner{position:relative; z-index:1;}
+.stamp-label{
+  font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--text-faint); margin-bottom:14px;
+}
+.code-display{
+  font-family:'JetBrains Mono',monospace; font-weight:700; font-size:clamp(16px,2.6vw,24px);
+  line-height:1.5; word-break:break-all; padding:18px; background:#0D1015; border:1px solid var(--line);
+  border-radius:10px; margin-bottom:16px;
+}
+.seg{padding:2px 1px; border-radius:3px;}
+.seg-sep{color:var(--text-faint); font-weight:400;}
+
+.copy-btn{
+  width:100%; background:var(--accent); border:none; color:#0D1015; font-family:'Space Grotesk',sans-serif;
+  font-weight:700; font-size:14px; padding:12px 16px; border-radius:9px; cursor:pointer; transition:.15s ease;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.copy-btn:hover{background:#F2603F;}
+.copy-btn:active{transform:scale(0.98);}
+.copy-btn.copied{background:var(--green); color:#0D1015;}
+
+.legend{display:flex; flex-direction:column; gap:8px; margin-top:18px;}
+.legend-row{
+  display:grid; grid-template-columns: 20px 90px 1fr; gap:10px; align-items:baseline;
+  font-size:12px; padding:5px 0; border-bottom:1px solid var(--line-soft);
+}
+.legend-row:last-child{border-bottom:none;}
+.legend-swatch{width:12px; height:12px; border-radius:3px; align-self:center;}
+.legend-field{font-family:'JetBrains Mono',monospace; color:var(--text-dim); font-weight:600;}
+.legend-value{color:var(--text-faint);}
+.legend-value b{color:var(--text);}
+
+/* ---------- Notes panel ---------- */
+.notes{
+  background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:22px 26px;
+}
+.notes-title{font-size:13px; font-weight:600; color:var(--text); margin-bottom:12px; display:flex; align-items:center; gap:8px;}
+.notes ul{margin:0; padding-left:18px; display:flex; flex-direction:column; gap:9px;}
+.notes li{font-size:12.5px; color:var(--text-dim); line-height:1.55;}
+.notes li b{color:var(--text);}
+.notes li.warn{color:var(--amber);}
+.notes li.warn b{color:var(--amber);}
+
+footer{
+  margin-top:40px; padding-top:20px; border-top:1px solid var(--line);
+  font-size:11.5px; color:var(--text-faint); font-family:'JetBrains Mono',monospace;
+  display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <div class="brand-eyebrow"><span class="dot"></span>QTS · Project Rhodes · ESP1</div>
+      <h1>Generador de nomenclatura BIM</h1>
+      <div class="subtitle">Construye nombres de contenedor de información (modelos, planos, documentos) según la convención de 8 campos fijada en el BEP del proyecto. El resultado sustituye el nombre de fichero — y, para planos, el número de plano en el cajetín.</div>
+    </div>
+    <div class="ref-box">
+      <div><b>BEP ref.</b> ESP1-DCZZ-XXX-XX-RP-G-00-04</div>
+      <div><b>Revisión</b> P02 · RIBA 4 Issue</div>
+      <div><b>Fecha</b> 07 Nov 2025 · Arup Spain</div>
+    </div>
+  </header>
+
+  <div class="mode-row">
+    <button class="mode-btn active" data-mode="all">Todos los campos</button>
+    <button class="mode-btn" data-mode="drawing">Solo planos (Info Type = DR)</button>
+  </div>
+
+  <div class="layout">
+
+    <!-- FIELDS -->
+    <div class="panel">
+      <div class="panel-title">Campos del nombre</div>
+
+      <div class="field">
+        <div class="field-label"><span class="field-num" style="background:var(--f-campus)">1</span><span class="field-name">Campus</span></div>
+        <div class="field-hint">Fijo para todo el proyecto (BEP §3.3.3).</div>
+        <div class="select-wrap"><select id="f1"><option value="ESP1">ESP1 — Campus del proyecto</option></select></div>
+      </div>
+
+      <div class="field">
+        <div class="field-label"><span class="field-num" style="background:var(--f-facility)">2</span><span class="field-name">Facility</span></div>
+        <div class="field-hint">Instalación / edificio (BEP §3.3.4).</div>
+        <div class="select-wrap"><select id="f2"></select></div>
+      </div>
+
+      <div class="field">
+        <div class="field-label"><span class="field-num" style="background:var(--f-zone)">3</span><span class="field-name">Zone / Volume</span></div>
+        <div class="field-hint">Zona o volumen del proyecto (BEP §3.3.5). Campo obligatorio — solo su significado cambia en paquetes PIGA/Tender.</div>
+        <div class="select-wrap"><select id="f3"></select></div>
+        <div class="field-warn" id="f3warn">⚠ En este código el primer carácter identifica el paquete (PIGA/Tender), no una zona física. Debe usarse de forma consistente y documentada.</div>
+      </div>
+
+      <div class="field">
+        <div class="field-label"><span class="field-num" style="background:var(--f-level)">4</span><span class="field-name">Levels / Location</span></div>
+        <div class="field-hint">Nivel o ubicación vertical (BEP §3.3.6).</div>
+        <div class="select-wrap"><select id="f4"></select></div>
+      </div>
+
+      <div class="field" id="field5">
+        <div class="field-label"><span class="field-num" style="background:var(--f-info)">5</span><span class="field-name">Information Type</span></div>
+        <div class="field-hint">Tipo de información del contenedor (BEP §3.3.7).</div>
+        <div class="select-wrap"><select id="f5"></select></div>
+      </div>
+
+      <div class="field">
+        <div class="field-label"><span class="field-num" style="background:var(--f-disc)">6</span><span class="field-name">Discipline</span></div>
+        <div class="field-hint">Disciplina / rol responsable (BEP §3.3.8).</div>
+        <div class="select-wrap"><select id="f6"></select></div>
+      </div>
+
+      <div class="field">
+        <div class="field-label"><span class="field-num" style="background:var(--f-doctype)">7</span><span class="field-name">Document Type</span></div>
+        <div class="field-hint">⚠ La tabla de códigos depende de la disciplina elegida en el campo 6 (BEP §3.3.9).</div>
+        <div class="select-wrap"><select id="f7"></select></div>
+        <div class="field-warn" id="f7warn">⚠ El BEP no define una tabla de Document Type específica para esta disciplina. Usa código genérico o consulta al BIM Manager.</div>
+      </div>
+
+      <div class="field">
+        <div class="field-label"><span class="field-num" style="background:var(--f-number)">8</span><span class="field-name">Number</span></div>
+        <div class="field-hint">Secuencial de 2 dígitos (00–99) dentro del subgrupo de Document Type (BEP §3.3.10).</div>
+        <input type="text" id="f8" maxlength="2" placeholder="00" inputmode="numeric">
+        <div class="field-warn" id="f8warn">⚠ Debe ser numérico de 2 dígitos (00–99).</div>
+      </div>
+
+    </div>
+
+    <!-- OUTPUT -->
+    <div class="output-col">
+      <div class="stamp">
+        <div class="stamp-inner">
+          <div class="stamp-label">Nombre generado</div>
+          <div class="code-display" id="codeDisplay"></div>
+          <button class="copy-btn" id="copyBtn">
+            <span id="copyLabel">Copiar nombre</span>
+          </button>
+          <div class="legend" id="legend"></div>
+        </div>
+      </div>
+
+      <div class="notes">
+        <div class="notes-title">Recordatorios del BEP</div>
+        <ul id="notesList">
+          <li><b>La revisión y el status NO van en el nombre.</b> Se gestionan aparte en el CDE y en el cajetín (S0–S7, D1–D4, A/B/CR + P01/C02…).</li>
+          <li><b>El número de plano en el cajetín debe coincidir exactamente</b> con este nombre generado.</li>
+          <li class="warn">Ficheros no conformes con esta convención <b>serán rechazados</b> en el CDE (BEP §3.13.3).</li>
+          <li>Al subir una revisión, <b>el nombre debe ser idéntico</b> al de la versión anterior — cualquier variación crea un fichero duplicado en Autodesk Docs.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <span>Herramienta interna de referencia — no sustituye la consulta del BEP completo.</span>
+    <span>ESP1-DCZZ-XXX-XX-RP-G-00-04 · P02</span>
+  </footer>
+
+</div>
+
+<script>
+// ---------------- DATA (from BEP) ----------------
+const FACILITY = [
+  ["DCZZ","Overall site, Generic / Multiple buildings"],
+  ["SUB1","Substation"],
+  ["DC01","Building 1"],
+  ["DCXX","Building Typical"],
+];
+
+const ZONE = [
+  ["ZZZ","Multiple volumes"],
+  ["XXX","No volume applicable"],
+  ["STE","Extent of whole site"],
+  ["DC1","DCn data suite"],
+  ["SUB","Sub stations"],
+  ["CS1","Customer requirements"],
+  ["T01","Tenant n zone"],
+  ["FOH","Front of house block"],
+  ["OPS","OPS (back of house) block"],
+  ["DH1","Data hall n"],
+  ["ZZA","Zone A"],
+  ["ZZB","Zone B"],
+  ["ZZC","Zone C"],
+  ["ZZD","Zone D"],
+  ["ZZE","Zone E"],
+  ["ZZF","Zone F"],
+  ["ZZG","Zone G"],
+  ["P**","PIGA Package (excepción — 1er carácter identifica paquete)"],
+  ["T**","Tender Package (excepción — 1er carácter identifica paquete)"],
+  ["ESD","External Site Development (Urbanization Project)"],
+  ["EXW","External Water Supply and Sewage Connection"],
+  ["EXD","External drainage Connection"],
+  ["ENW","Enabling Works"],
+  ["LAA","Existing 45kV line"],
+];
+
+const LEVEL = [
+  ["ZZ","Multiple levels"],
+  ["XX","No level applicable"],
+  ["BG","Below ground"],
+  ["B1","Basement n level"],
+  ["M1","Mezzanine n level"],
+  ["00","Ground floor"],
+  ["01","First floor"],
+  ["R1","Roof n level"],
+  ["RG","Gantry"],
+];
+
+const INFO_TYPE = [
+  {group:"Dibujos y modelos", items:[
+    ["AF","Animation File"],
+    ["CM","Combined (Federated) Model"],
+    ["CR","Clash Rendition"],
+    ["DR","Drawing"],
+    ["DD","Detail Drawing"],
+    ["M3","3D Model"],
+    ["MR","Model Rendition"],
+    ["SK","Sketch drawing"],
+    ["VS","Visualization"],
+  ]},
+  {group:"Documentos", items:[
+    ["BQ","Bill of Quantities"],
+    ["CA","Calculation"],
+    ["CO","Correspondence"],
+    ["CP","Cost Plan"],
+    ["DB","Database"],
+    ["FN","File Note"],
+    ["HS","Health and Safety"],
+    ["IE","Information Exchange File"],
+    ["MI","Minutes / action notes"],
+    ["MS","Method Statement"],
+    ["PP","Presentation"],
+    ["PR","Program"],
+    ["RI","Request for Information"],
+    ["RP","Report"],
+    ["SA","Schedule for Accommodation"],
+    ["SH","Schedule"],
+    ["SN","Snagging List"],
+    ["SP","Specification"],
+    ["SU","Survey"],
+  ]},
+];
+
+const DISCIPLINE = [
+  ["A","Architect"],
+  ["B","Geotechnical"],
+  ["C","Civil Engineer"],
+  ["D","Process"],
+  ["E","Electrical Engineer"],
+  ["F","Fire Protection"],
+  ["G","General, BIM Coordinator / Manager"],
+  ["H","Hazardous Material"],
+  ["I","Interior Designer"],
+  ["J","Combined Services"],
+  ["K","Client"],
+  ["L","Landscape Architect"],
+  ["M","Mechanical Engineer (HVAC and water works)"],
+  ["N","Security Engineer"],
+  ["O","Operations"],
+  ["P","Plumbing"],
+  ["Q","Equipment"],
+  ["R","Resource"],
+  ["S","Structural Engineer"],
+  ["T","Telecommunications"],
+  ["U","Health and Safety Advisor"],
+  ["V","Survey / Mapping"],
+  ["W","Distributed Energy"],
+  ["X","Other Disciplines"],
+  ["Y","Specialist designer / Acoustic / Fire consultant"],
+  ["Z","Contractor / Shop Drawings"],
+];
+
+// Doc Type tables per discipline group (BEP §3.3.9)
+const DOCTYPE_ARCH = [
+  ["00","General: Symbol legend, abbreviations, general notes"],
+  ["10","Site Location Plan"],
+  ["11","Existing site Plan"],
+  ["12","Proposed Site plans"],
+  ["20","Loading Plans"],
+  ["25","Piling Plans"],
+  ["30","GA plans"],
+  ["31","GA Sections"],
+  ["32","GA Elevations"],
+  ["77","Fire strategy"],
+];
+const DOCTYPE_STRUCT = [
+  ["00","General: Symbol legend, abbreviations, general notes and 3D views"],
+  ["10","Loading Plans"],
+  ["25","Foundation Plans"],
+  ["30","Superstructure GA Plans"],
+  ["31","RC Superstructure Plans"],
+  ["35","Sections and elevations"],
+  ["40","Interior Areas Development"],
+  ["50","Exterior Areas Development"],
+  ["70","Details"],
+  ["80","Schedules"],
+];
+const DOCTYPE_CIVIL = [
+  ["00","Site Layouts"],
+  ["01","Existing Conditions"],
+  ["10","Civil Works"],
+  ["20","Underground Combined Services"],
+  ["21","Hydraulic Underground Services"],
+  ["30","Electrical & Others Underground Services"],
+  ["40","Details"],
+  ["50","Typical Sections"],
+  ["60","Longitudinal Sections"],
+  ["70","Schematics and Schedules"],
+  ["80","Others"],
+];
+const DOCTYPE_MEP = [
+  ["00","General: Symbol legend, abbreviations, general notes"],
+  ["01","Plans"],
+  ["02","Plans"],
+  ["03","Sections and elevations"],
+  ["04","Large Scale Drawings (blown up): plans, elevations, sections (NOT details)"],
+  ["05","Details"],
+  ["06","Schedules and Diagrams"],
+  ["09","3D Drawings (isometric, perspective, photos)"],
+];
+
+// map discipline code -> doctype table. Disciplines not covered by BEP tables -> null
+const DOCTYPE_MAP = {
+  A: DOCTYPE_ARCH,
+  S: DOCTYPE_STRUCT,
+  C: DOCTYPE_CIVIL,
+  M: DOCTYPE_MEP, E: DOCTYPE_MEP, P: DOCTYPE_MEP, F: DOCTYPE_MEP,
+};
+
+// ---------------- BUILD ----------------
+const $ = id => document.getElementById(id);
+
+function fillSelect(sel, items, {grouped=false}={}){
+  sel.innerHTML = "";
+  if(grouped){
+    items.forEach(g=>{
+      const og = document.createElement("optgroup");
+      og.label = g.group;
+      g.items.forEach(([code,label])=>{
+        const o = document.createElement("option");
+        o.value = code; o.textContent = `${code} — ${label}`;
+        og.appendChild(o);
+      });
+      sel.appendChild(og);
+    });
+  } else {
+    items.forEach(([code,label])=>{
+      const o = document.createElement("option");
+      o.value = code; o.textContent = `${code} — ${label}`;
+      sel.appendChild(o);
+    });
+  }
+}
+
+fillSelect($("f2"), FACILITY);
+fillSelect($("f3"), ZONE);
+fillSelect($("f4"), LEVEL);
+fillSelect($("f5"), INFO_TYPE, {grouped:true});
+fillSelect($("f6"), DISCIPLINE);
+
+function refreshDocType(){
+  const disc = $("f6").value;
+  const table = DOCTYPE_MAP[disc] || null;
+  const sel = $("f7");
+  const warn = $("f7warn");
+  if(table){
+    fillSelect(sel, table);
+    sel.disabled = false;
+    warn.classList.remove("show");
+  } else {
+    sel.innerHTML = "";
+    const o = document.createElement("option");
+    o.value = "00"; o.textContent = "00 — (sin tabla específica en el BEP)";
+    sel.appendChild(o);
+    warn.classList.add("show");
+  }
+  render();
+}
+
+function refreshZoneWarn(){
+  const v = $("f3").value;
+  $("f3warn").classList.toggle("show", v === "P**" || v === "T**");
+}
+
+function labelFor(list, code, grouped=false){
+  if(grouped){
+    for(const g of list){ const hit = g.items.find(i=>i[0]===code); if(hit) return hit[1]; }
+    return "";
+  }
+  const hit = list.find(i=>i[0]===code);
+  return hit ? hit[1] : "";
+}
+
+function currentDocTypeTable(){
+  return DOCTYPE_MAP[$("f6").value] || [["00","(sin tabla específica en el BEP)"]];
+}
+
+let mode = "all"; // "all" | "drawing"
+
+function applyMode(){
+  const f5 = $("f5");
+  const field5 = $("field5");
+  if(mode === "drawing"){
+    f5.value = "DR";
+    f5.disabled = true;
+    field5.style.opacity = "0.55";
+  } else {
+    f5.disabled = false;
+    field5.style.opacity = "1";
+    if(!f5.value) f5.value = "DR";
+  }
+  render();
+}
+
+document.querySelectorAll(".mode-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".mode-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    mode = btn.dataset.mode;
+    applyMode();
+  });
+});
+
+function validateNumber(){
+  const val = $("f8").value.replace(/[^0-9]/g,"").slice(0,2);
+  $("f8").value = val;
+  const ok = val.length === 2;
+  $("f8warn").classList.toggle("show", val.length>0 && !ok);
+  return ok ? val : "00";
+}
+
+function render(){
+  const f1 = $("f1").value;
+  const f2 = $("f2").value;
+  const f3 = $("f3").value;
+  const f4 = $("f4").value;
+  const f5 = $("f5").value;
+  const f6 = $("f6").value;
+  const f7 = $("f7").value;
+  const f8raw = $("f8").value.replace(/[^0-9]/g,"").slice(0,2);
+  const f8 = f8raw.length === 2 ? f8raw : (f8raw.length===1 ? f8raw : "00");
+
+  const parts = [
+    {code:f1, color:"var(--f-campus)"},
+    {code:f2, color:"var(--f-facility)"},
+    {code:f3, color:"var(--f-zone)"},
+    {code:f4, color:"var(--f-level)"},
+    {code:f5, color:"var(--f-info)"},
+    {code:f6, color:"var(--f-disc)"},
+    {code:f7, color:"var(--f-doctype)"},
+    {code:f8, color:"var(--f-number)"},
+  ];
+
+  $("codeDisplay").innerHTML = parts.map((p,i)=>{
+    const sep = i < parts.length-1 ? '<span class="seg-sep">-</span>' : '';
+    return `<span class="seg" style="color:${p.color}">${p.code||"···"}</span>${sep}`;
+  }).join("");
+
+  // legend
+  const legendData = [
+    ["var(--f-campus)","Campus", f1, "Campus del proyecto"],
+    ["var(--f-facility)","Facility", f2, labelFor(FACILITY, f2)],
+    ["var(--f-zone)","Zone/Vol.", f3, labelFor(ZONE, f3)],
+    ["var(--f-level)","Level", f4, labelFor(LEVEL, f4)],
+    ["var(--f-info)","Info Type", f5, labelFor(INFO_TYPE, f5, true)],
+    ["var(--f-disc)","Discipline", f6, labelFor(DISCIPLINE, f6)],
+    ["var(--f-doctype)","Doc Type", f7, labelFor(currentDocTypeTable(), f7)],
+    ["var(--f-number)","Number", f8, "Correlativo (00–99)"],
+  ];
+  $("legend").innerHTML = legendData.map(([color,name,code,label])=>`
+    <div class="legend-row">
+      <span class="legend-swatch" style="background:${color}"></span>
+      <span class="legend-field">${name}</span>
+      <span class="legend-value"><b>${code}</b> — ${label}</span>
+    </div>
+  `).join("");
+}
+
+// wire events
+["f1","f2","f3","f4","f5","f6","f7"].forEach(id=>{
+  $(id).addEventListener("change", ()=>{
+    if(id==="f6") refreshDocType();
+    if(id==="f3") refreshZoneWarn();
+    render();
+  });
+});
+$("f8").addEventListener("input", ()=>{ validateNumber(); render(); });
+
+$("copyBtn").addEventListener("click", ()=>{
+  const text = $("codeDisplay").innerText.replace(/\s+/g,"");
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = $("copyBtn");
+    const label = $("copyLabel");
+    const prev = label.textContent;
+    btn.classList.add("copied");
+    label.textContent = "✓ Copiado";
+    setTimeout(()=>{ btn.classList.remove("copied"); label.textContent = prev; }, 1600);
+  });
+});
+
+// init
+refreshDocType();
+refreshZoneWarn();
+applyMode();
+</script>
+</body>
+</html>
