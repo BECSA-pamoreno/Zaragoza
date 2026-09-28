@@ -26,8 +26,7 @@
   --green:#6FBF73;
   --grey:#9AA2AF;
 
-  --f-campus:#9AA2AF;
-  --f-facility:#9AA2AF;
+  --f-id:#9AA2AF;
   --f-zone:#E0A93E;
   --f-level:#4FB6A0;
   --f-info:#9C8CF0;
@@ -57,7 +56,7 @@ body{
 header{
   display:flex; flex-wrap:wrap; gap:24px; justify-content:space-between; align-items:flex-end;
   border-bottom:1px solid var(--line);
-  padding-bottom:26px; margin-bottom:34px;
+  padding-bottom:26px; margin-bottom:28px;
 }
 .brand-eyebrow{
   font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.14em;
@@ -72,6 +71,13 @@ h1{font-size:clamp(26px,3.4vw,38px); font-weight:700; margin:0 0 6px; letter-spa
   min-width:230px; line-height:1.7;
 }
 .ref-box b{color:var(--text-dim); font-weight:600;}
+
+.source-banner{
+  display:flex; align-items:center; gap:10px; font-size:12px; color:var(--text-faint);
+  font-family:'JetBrains Mono',monospace; margin-bottom:28px; padding:10px 14px;
+  background:var(--panel); border:1px solid var(--line); border-radius:8px;
+}
+.source-banner b{color:var(--teal);}
 
 /* ---------- Mode toggle ---------- */
 .mode-row{display:flex; gap:10px; margin-bottom:28px; flex-wrap:wrap;}
@@ -104,7 +110,7 @@ h1{font-size:clamp(26px,3.4vw,38px); font-weight:700; margin:0 0 6px; letter-spa
   display:flex; align-items:center; gap:9px; margin-bottom:7px;
 }
 .field-num{
-  font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700;
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700;
   width:20px; height:20px; border-radius:5px; display:flex; align-items:center; justify-content:center;
   color:#12151A; flex-shrink:0;
 }
@@ -148,7 +154,7 @@ input[type="text"]{cursor:text;}
   color:var(--text-faint); margin-bottom:14px;
 }
 .code-display{
-  font-family:'JetBrains Mono',monospace; font-weight:700; font-size:clamp(16px,2.6vw,24px);
+  font-family:'JetBrains Mono',monospace; font-weight:700; font-size:clamp(14px,2.2vw,21px);
   line-height:1.5; word-break:break-all; padding:18px; background:#0D1015; border:1px solid var(--line);
   border-radius:10px; margin-bottom:16px;
 }
@@ -166,7 +172,7 @@ input[type="text"]{cursor:text;}
 
 .legend{display:flex; flex-direction:column; gap:8px; margin-top:18px;}
 .legend-row{
-  display:grid; grid-template-columns: 20px 90px 1fr; gap:10px; align-items:baseline;
+  display:grid; grid-template-columns: 20px 92px 1fr; gap:10px; align-items:baseline;
   font-size:12px; padding:5px 0; border-bottom:1px solid var(--line-soft);
 }
 .legend-row:last-child{border-bottom:none;}
@@ -186,6 +192,14 @@ input[type="text"]{cursor:text;}
 .notes li.warn{color:var(--amber);}
 .notes li.warn b{color:var(--amber);}
 
+/* suitability chip row */
+.suit-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;}
+.suit-chip{
+  font-family:'JetBrains Mono',monospace; font-size:11px; border:1px solid var(--line);
+  border-radius:6px; padding:5px 9px; color:var(--text-dim); background:var(--panel-2);
+}
+.suit-chip b{color:var(--text);}
+
 footer{
   margin-top:40px; padding-top:20px; border-top:1px solid var(--line);
   font-size:11.5px; color:var(--text-faint); font-family:'JetBrains Mono',monospace;
@@ -200,18 +214,20 @@ footer{
     <div>
       <div class="brand-eyebrow"><span class="dot"></span>QTS · Project Rhodes · ESP1</div>
       <h1>Generador de nomenclatura BIM</h1>
-      <div class="subtitle">Construye nombres de contenedor de información (modelos, planos, documentos) según la convención de 8 campos fijada en el BEP del proyecto. El resultado sustituye el nombre de fichero — y, para planos, el número de plano en el cajetín.</div>
+      <div class="subtitle">Construye nombres de contenedor de información (modelos, planos, documentos) según la convención de 9 campos: la estructura de 8 campos del BEP de QTS, ampliada por Becsa con el campo <b>Originador</b>.</div>
     </div>
     <div class="ref-box">
       <div><b>BEP ref.</b> ESP1-DCZZ-XXX-XX-RP-G-00-04</div>
-      <div><b>Revisión</b> P02 · RIBA 4 Issue</div>
-      <div><b>Fecha</b> 07 Nov 2025 · Arup Spain</div>
+      <div><b>Convención</b> ESP1-MER-DC01-XXX-XX-ST-G-00-01</div>
+      <div><b>Fecha</b> P02 · RIBA 4 Issue</div>
     </div>
   </header>
 
+  <div class="source-banner">📄 Campos y códigos actualizados desde <b>"Naming Convention" (Índice de convención de nombres)</b> — hoja de referencia oficial del proyecto. Ante cualquier código que no aparezca aquí: <b>no inventar</b> — consultar con Control Documental / Oficina Técnica.</div>
+
   <div class="mode-row">
     <button class="mode-btn active" data-mode="all">Todos los campos</button>
-    <button class="mode-btn" data-mode="drawing">Solo planos (Info Type = DR)</button>
+    <button class="mode-btn" data-mode="drawing">Solo planos (Tipo de archivo = DR)</button>
   </div>
 
   <div class="layout">
@@ -221,54 +237,60 @@ footer{
       <div class="panel-title">Campos del nombre</div>
 
       <div class="field">
-        <div class="field-label"><span class="field-num" style="background:var(--f-campus)">1</span><span class="field-name">Campus</span></div>
-        <div class="field-hint">Fijo para todo el proyecto (BEP §3.3.3).</div>
-        <div class="select-wrap"><select id="f1"><option value="ESP1">ESP1 — Campus del proyecto</option></select></div>
+        <div class="field-label"><span class="field-num" style="background:var(--f-id)">1</span><span class="field-name">Proyecto</span></div>
+        <div class="field-hint">Fijo para todo el proyecto.</div>
+        <div class="select-wrap"><select id="f1"></select></div>
       </div>
 
       <div class="field">
-        <div class="field-label"><span class="field-num" style="background:var(--f-facility)">2</span><span class="field-name">Facility</span></div>
-        <div class="field-hint">Instalación / edificio (BEP §3.3.4).</div>
+        <div class="field-label"><span class="field-num" style="background:var(--f-id)">2</span><span class="field-name">Originador</span></div>
+        <div class="field-hint">Empresa que crea/emite el archivo. Campo propio de Becsa — no aparece en el BEP original de QTS, pero se añade para identificar quién produce cada entrega.</div>
         <div class="select-wrap"><select id="f2"></select></div>
       </div>
 
       <div class="field">
-        <div class="field-label"><span class="field-num" style="background:var(--f-zone)">3</span><span class="field-name">Zone / Volume</span></div>
-        <div class="field-hint">Zona o volumen del proyecto (BEP §3.3.5). Campo obligatorio — solo su significado cambia en paquetes PIGA/Tender.</div>
+        <div class="field-label"><span class="field-num" style="background:var(--f-id)">3</span><span class="field-name">Edificio / Instalación</span></div>
+        <div class="field-hint">Instalación o edificio al que afecta el documento.</div>
         <div class="select-wrap"><select id="f3"></select></div>
-        <div class="field-warn" id="f3warn">⚠ En este código el primer carácter identifica el paquete (PIGA/Tender), no una zona física. Debe usarse de forma consistente y documentada.</div>
       </div>
 
       <div class="field">
-        <div class="field-label"><span class="field-num" style="background:var(--f-level)">4</span><span class="field-name">Levels / Location</span></div>
-        <div class="field-hint">Nivel o ubicación vertical (BEP §3.3.6).</div>
+        <div class="field-label"><span class="field-num" style="background:var(--f-zone)">4</span><span class="field-name">Volumen / Zona</span></div>
+        <div class="field-hint">Área concreta del proyecto. Campo obligatorio — solo su significado cambia en paquetes PIGA/Tender.</div>
         <div class="select-wrap"><select id="f4"></select></div>
+        <div class="field-warn" id="f4warn">⚠ En este código el primer carácter identifica el paquete (PIGA/Tender), no una zona física. Debe usarse de forma consistente y documentada.</div>
       </div>
 
-      <div class="field" id="field5">
-        <div class="field-label"><span class="field-num" style="background:var(--f-info)">5</span><span class="field-name">Information Type</span></div>
-        <div class="field-hint">Tipo de información del contenedor (BEP §3.3.7).</div>
+      <div class="field">
+        <div class="field-label"><span class="field-num" style="background:var(--f-level)">5</span><span class="field-name">Nivel</span></div>
+        <div class="field-hint">Planta o nivel del edificio.</div>
         <div class="select-wrap"><select id="f5"></select></div>
       </div>
 
-      <div class="field">
-        <div class="field-label"><span class="field-num" style="background:var(--f-disc)">6</span><span class="field-name">Discipline</span></div>
-        <div class="field-hint">Disciplina / rol responsable (BEP §3.3.8).</div>
+      <div class="field" id="field6">
+        <div class="field-label"><span class="field-num" style="background:var(--f-info)">6</span><span class="field-name">Tipo de archivo</span></div>
+        <div class="field-hint">Qué clase de documento es: informe, plano, procedimiento, acta… (97 códigos posibles).</div>
         <div class="select-wrap"><select id="f6"></select></div>
       </div>
 
       <div class="field">
-        <div class="field-label"><span class="field-num" style="background:var(--f-doctype)">7</span><span class="field-name">Document Type</span></div>
-        <div class="field-hint">⚠ La tabla de códigos depende de la disciplina elegida en el campo 6 (BEP §3.3.9).</div>
+        <div class="field-label"><span class="field-num" style="background:var(--f-disc)">7</span><span class="field-name">Disciplina</span></div>
+        <div class="field-hint">Área técnica responsable del contenido.</div>
         <div class="select-wrap"><select id="f7"></select></div>
-        <div class="field-warn" id="f7warn">⚠ El BEP no define una tabla de Document Type específica para esta disciplina. Usa código genérico o consulta al BIM Manager.</div>
       </div>
 
       <div class="field">
-        <div class="field-label"><span class="field-num" style="background:var(--f-number)">8</span><span class="field-name">Number</span></div>
-        <div class="field-hint">Secuencial de 2 dígitos (00–99) dentro del subgrupo de Document Type (BEP §3.3.10).</div>
-        <input type="text" id="f8" maxlength="2" placeholder="00" inputmode="numeric">
-        <div class="field-warn" id="f8warn">⚠ Debe ser numérico de 2 dígitos (00–99).</div>
+        <div class="field-label"><span class="field-num" style="background:var(--f-doctype)">8</span><span class="field-name">Clasificación</span></div>
+        <div class="field-hint">⚠ La tabla de códigos depende de la disciplina elegida en el campo 7. Describe el contenido dentro de la disciplina.</div>
+        <div class="select-wrap"><select id="f8"></select></div>
+        <div class="field-warn" id="f8warn">⚠ No hay tabla de clasificación específica para esta disciplina en la hoja de referencia. Usa código genérico "00" o consulta con Control Documental.</div>
+      </div>
+
+      <div class="field">
+        <div class="field-label"><span class="field-num" style="background:var(--f-number)">9</span><span class="field-name">Número</span></div>
+        <div class="field-hint">Secuencial de 2 dígitos (00–99) dentro del subgrupo de Clasificación. Usa 01, 02, 03… para una secuencia normal.</div>
+        <input type="text" id="f9" maxlength="2" placeholder="00" inputmode="numeric">
+        <div class="field-warn" id="f9warn">⚠ Debe ser numérico de 2 dígitos (00–99).</div>
       </div>
 
     </div>
@@ -287,12 +309,18 @@ footer{
       </div>
 
       <div class="notes">
-        <div class="notes-title">Recordatorios del BEP</div>
+        <div class="notes-title">Código de adecuación (suitability)</div>
+        <div class="suit-row" id="suitRow"></div>
+        <div style="font-size:11.5px;color:var(--text-faint);margin-top:10px;line-height:1.5;">No forma parte del nombre del archivo — se gestiona aparte, en el CDE y en el cajetín.</div>
+      </div>
+
+      <div class="notes">
+        <div class="notes-title">Recordatorios</div>
         <ul id="notesList">
-          <li><b>La revisión y el status NO van en el nombre.</b> Se gestionan aparte en el CDE y en el cajetín (S0–S7, D1–D4, A/B/CR + P01/C02…).</li>
-          <li><b>El número de plano en el cajetín debe coincidir exactamente</b> con este nombre generado.</li>
-          <li class="warn">Ficheros no conformes con esta convención <b>serán rechazados</b> en el CDE (BEP §3.13.3).</li>
-          <li>Al subir una revisión, <b>el nombre debe ser idéntico</b> al de la versión anterior — cualquier variación crea un fichero duplicado en Autodesk Docs.</li>
+          <li><b>Orden obligatorio de los 9 bloques</b>, separados por un único guion. No se cambia el orden ni se omiten campos.</li>
+          <li><b>No inventes códigos.</b> Si una opción no aparece en las listas, consulta con Control Documental u Oficina Técnica antes de crear uno nuevo.</li>
+          <li>La revisión y el status <b>no van en el nombre</b> — se gestionan aparte en el CDE y el cajetín.</li>
+          <li class="warn">Una mala codificación puede impedir la carga, revisión o trazabilidad del documento por parte del cliente.</li>
         </ul>
       </div>
     </div>
@@ -300,217 +328,292 @@ footer{
   </div>
 
   <footer>
-    <span>Herramienta interna de referencia — no sustituye la consulta del BEP completo.</span>
-    <span>ESP1-DCZZ-XXX-XX-RP-G-00-04 · P02</span>
+    <span>Herramienta interna de referencia — no sustituye la consulta del documento de convención de nombres completo.</span>
+    <span>ESP1-MER-DC01-XXX-XX-ST-G-00-01</span>
   </footer>
 
 </div>
 
 <script>
-// ---------------- DATA (from BEP) ----------------
+// ---------------- DATA (extracted from "Naming Convention" reference sheet) ----------------
+const PROYECTO = [
+  ["ESP1","Todo el emplazamiento"],
+];
+
+const ORIGINADOR = [
+  ["MER","MER - Mercury"],
+  ["BEC","Empresa BECSA"],
+  ["YYY","Empresa YYY (placeholder — sustituir por código acordado)"],
+];
+
 const FACILITY = [
-  ["DCZZ","Overall site, Generic / Multiple buildings"],
-  ["SUB1","Substation"],
-  ["DC01","Building 1"],
-  ["DCXX","Building Typical"],
+  ["DCZZ","Emplazamiento completo"],
+  ["SUB1","Subestacion"],
+  ["DC01","Edificio 1"],
+  ["DCXX","Edificio tipo"],
 ];
 
 const ZONE = [
-  ["ZZZ","Multiple volumes"],
-  ["XXX","No volume applicable"],
-  ["STE","Extent of whole site"],
-  ["DC1","DCn data suite"],
-  ["SUB","Sub stations"],
-  ["CS1","Customer requirements"],
-  ["T01","Tenant n zone"],
-  ["FOH","Front of house block"],
-  ["OPS","OPS (back of house) block"],
-  ["DH1","Data hall n"],
-  ["ZZA","Zone A"],
-  ["ZZB","Zone B"],
-  ["ZZC","Zone C"],
-  ["ZZD","Zone D"],
-  ["ZZE","Zone E"],
-  ["ZZF","Zone F"],
-  ["ZZG","Zone G"],
-  ["P**","PIGA Package (excepción — 1er carácter identifica paquete)"],
-  ["T**","Tender Package (excepción — 1er carácter identifica paquete)"],
-  ["ESD","External Site Development (Urbanization Project)"],
-  ["EXW","External Water Supply and Sewage Connection"],
-  ["EXD","External drainage Connection"],
-  ["ENW","Enabling Works"],
-  ["LAA","Existing 45kV line"],
+  ["ZZZ","Varios volumenes"],
+  ["XXX","Volumen no aplicable"],
+  ["STE","Extension de todo el emplazamiento"],
+  ["DC1","Sala de datos DCn"],
+  ["SUB","Subestaciones"],
+  ["CS1","Requisitos del cliente"],
+  ["T01","Zona n del arrendatario"],
+  ["FOH","Bloque de zona publica"],
+  ["OPS","Bloque OPS (zona de servicio)"],
+  ["DH1","Sala de datos n"],
+  ["ZZA","Zona A"],
+  ["ZZB","Zona B"],
+  ["ZZC","Zona C"],
+  ["ZZD","Zona D"],
+  ["ZZE","Zona E"],
+  ["ZZF","Zona F"],
+  ["ZZG","Zona G"],
+  ["P**","Paquete PIGA (excepción — 1er carácter identifica paquete)"],
+  ["T**","Paquete de licitacion (excepción — 1er carácter identifica paquete)"],
+  ["ESD","Desarrollo exterior del emplazamiento (p. ej., proyecto de urbanizacion)"],
+  ["EXW","Conexion exterior de abastecimiento de agua y saneamiento"],
+  ["EXD","Conexion exterior de drenaje"],
+  ["ENW","Trabajos preparatorios"],
+  ["LAA","Linea existente de 45 kV"],
 ];
 
 const LEVEL = [
-  ["ZZ","Multiple levels"],
-  ["XX","No level applicable"],
-  ["BG","Below ground"],
-  ["B1","Basement n level"],
-  ["M1","Mezzanine n level"],
-  ["00","Ground floor"],
-  ["01","First floor"],
-  ["R1","Roof n level"],
-  ["RG","Gantry"],
+  ["ZZ","Varios niveles"],
+  ["XX","Nivel no aplicable"],
+  ["BG","Bajo rasante"],
+  ["B1","Nivel n de sotano"],
+  ["M1","Nivel n de entreplanta"],
+  ["00","Planta baja"],
+  ["01","Planta primera"],
+  ["R1","Nivel n de cubierta"],
+  ["RG","Portico"],
 ];
 
+// Tipo de archivo — lista completa (97 códigos), alfabética, tal como en la hoja de referencia
 const INFO_TYPE = [
-  {group:"Dibujos y modelos", items:[
-    ["AF","Animation File"],
-    ["CM","Combined (Federated) Model"],
-    ["CR","Clash Rendition"],
-    ["DR","Drawing"],
-    ["DD","Detail Drawing"],
-    ["M3","3D Model"],
-    ["MR","Model Rendition"],
-    ["SK","Sketch drawing"],
-    ["VS","Visualization"],
-  ]},
-  {group:"Documentos", items:[
-    ["BQ","Bill of Quantities"],
-    ["CA","Calculation"],
-    ["CO","Correspondence"],
-    ["CP","Cost Plan"],
-    ["DB","Database"],
-    ["FN","File Note"],
-    ["HS","Health and Safety"],
-    ["IE","Information Exchange File"],
-    ["MI","Minutes / action notes"],
-    ["MS","Method Statement"],
-    ["PP","Presentation"],
-    ["PR","Program"],
-    ["RI","Request for Information"],
-    ["RP","Report"],
-    ["SA","Schedule for Accommodation"],
-    ["SH","Schedule"],
-    ["SN","Snagging List"],
-    ["SP","Specification"],
-    ["SU","Survey"],
-  ]},
+  ["AF","Archivo de animacion"],
+  ["AG","Orden del dia"],
+  ["AP","Solicitud"],
+  ["AU","Auditoria"],
+  ["BD","Bases de diseno"],
+  ["BL","Folleto"],
+  ["BM","Referencia comparativa"],
+  ["BQ","Mediciones y presupuesto"],
+  ["CA","Calculos"],
+  ["CC","Contrato"],
+  ["CD","Registro de conversacion"],
+  ["CE","Certificado"],
+  ["CH","Grafico"],
+  ["CM","Modelo combinado"],
+  ["CO","Correspondencia"],
+  ["CP","Plan de costes"],
+  ["CR","Representacion de interferencias"],
+  ["CT","Comentario"],
+  ["CX","Pruebas y puesta en marcha"],
+  ["DB","Base de datos"],
+  ["DD","Plano de detalle"],
+  ["DR","Plano 2D"],
+  ["DT","Ficha de datos"],
+  ["DY","Directorio"],
+  ["EL","Plano de alzado"],
+  ["EM","Correo electronico"],
+  ["ES","Estimacion"],
+  ["FM","Formulario"],
+  ["FN","Nota de archivo"],
+  ["GU","Guia"],
+  ["HS","Seguridad y salud"],
+  ["IE","Archivo de intercambio de informacion"],
+  ["IM","Imagen (excepto fotografias)"],
+  ["IN","Instruccion"],
+  ["IV","Factura"],
+  ["LA","Plano de distribucion"],
+  ["LG","Log"],
+  ["LI","Lista"],
+  ["LP","Plan de izado"],
+  ["LT","Carta"],
+  ["M2","Modelo bidimensional"],
+  ["M3","Modelo tridimensional"],
+  ["MA","Manual"],
+  ["ME","Memorando"],
+  ["MI","Acta"],
+  ["MR","Representacion del modelo"],
+  ["MS","Procedimiento de trabajo"],
+  ["MU","Maquetas"],
+  ["MX","Matriz"],
+  ["NC","Informes de no conformidad"],
+  ["OM","Manuales de operacion y mantenimiento"],
+  ["PC","Procedimiento"],
+  ["PH","Fotografia"],
+  ["PL","Plano"],
+  ["PP","Presentacion"],
+  ["PR","Programa"],
+  ["PS","Propuesta"],
+  ["PT","Permiso"],
+  ["PW","Flujo de trabajo del proceso"],
+  ["PY","Politica"],
+  ["PZ","Protocolo"],
+  ["QN","Oferta"],
+  ["QR","Codigos QR (codigos de respuesta rapida)"],
+  ["RD","Ficha de datos de sala"],
+  ["RG","Registro"],
+  ["RI","Solicitud de informacion"],
+  ["RN","Reglamento"],
+  ["RP","Informe"],
+  ["RQ","Requisicion"],
+  ["SA","Muestras"],
+  ["SB","Entrega para aprobacion"],
+  ["SC","Esquema / unifilares"],
+  ["SD","Norma"],
+  ["SE","Plano de seccion"],
+  ["SH","Planificacion o tabla"],
+  ["SK","Croquis"],
+  ["SN","Lista de repasos"],
+  ["SO","Pedido de subcontratacion"],
+  ["SP","Especificacion"],
+  ["ST","Estudio"],
+  ["SU","Levantamiento"],
+  ["SW","Alcance de los trabajos"],
+  ["SY","Estrategia"],
+  ["TC","Certificados de ensayo"],
+  ["TE","Plantilla"],
+  ["TG","Registro de formacion"],
+  ["TL","Hoja de transmision"],
+  ["TN","Nota de transferencia"],
+  ["TP","Dossier de pruebas"],
+  ["TQ","Consulta tecnica"],
+  ["TR","Resultado de ensayo"],
+  ["TT","Charlas de seguridad"],
+  ["TW","Obras provisionales"],
+  ["VA","Modificacion"],
+  ["VL","Valoracion"],
+  ["VS","Visualizacion / renderizado"],
+  ["WR","Garantia"],
 ];
 
 const DISCIPLINE = [
-  ["A","Architect"],
-  ["B","Geotechnical"],
-  ["C","Civil Engineer"],
-  ["D","Process"],
-  ["E","Electrical Engineer"],
-  ["F","Fire Protection"],
-  ["G","General, BIM Coordinator / Manager"],
-  ["H","Hazardous Material"],
-  ["I","Interior Designer"],
-  ["J","Combined Services"],
-  ["K","Client"],
-  ["L","Landscape Architect"],
-  ["M","Mechanical Engineer (HVAC and water works)"],
-  ["N","Security Engineer"],
-  ["O","Operations"],
-  ["P","Plumbing"],
-  ["Q","Equipment"],
-  ["R","Resource"],
-  ["S","Structural Engineer"],
-  ["T","Telecommunications"],
-  ["U","Health and Safety Advisor"],
-  ["V","Survey / Mapping"],
-  ["W","Distributed Energy"],
-  ["X","Other Disciplines"],
-  ["Y","Specialist designer / Acoustic / Fire consultant"],
-  ["Z","Contractor / Shop Drawings"],
+  ["A","Arquitecto"],
+  ["B","Geotecnia"],
+  ["C","Ingeniero civil"],
+  ["D","Procesos"],
+  ["E","Ingeniero electrico"],
+  ["F","Proteccion contra incendios"],
+  ["G","General, coordinador / responsable BIM"],
+  ["H","Materiales peligrosos"],
+  ["I","Disenador de interiores"],
+  ["J","Servicios combinados"],
+  ["K","Cliente"],
+  ["L","Arquitecto paisajista"],
+  ["M","Ingeniero mecanico. Climatizacion y obras hidraulicas"],
+  ["N","Ingeniero de seguridad"],
+  ["O","Operaciones"],
+  ["P","Fontaneria"],
+  ["Q","Equipos"],
+  ["R","Recursos"],
+  ["S","Ingeniero de estructuras"],
+  ["T","Telecomunicaciones"],
+  ["U","Asesor de seguridad y salud"],
+  ["V","Topografia / cartografia"],
+  ["W","Energia distribuida"],
+  ["X","Otras disciplinas"],
+  ["Y","Disenador especialista / consultor acustico / consultor de incendios"],
+  ["Z","Contratista / planos de taller"],
 ];
 
-// Doc Type tables per discipline group (BEP §3.3.9)
-const DOCTYPE_ARCH = [
-  ["00","General: Symbol legend, abbreviations, general notes"],
-  ["10","Site Location Plan"],
-  ["11","Existing site Plan"],
-  ["12","Proposed Site plans"],
-  ["20","Loading Plans"],
-  ["25","Piling Plans"],
-  ["30","GA plans"],
-  ["31","GA Sections"],
-  ["32","GA Elevations"],
-  ["77","Fire strategy"],
+// Clasificación — tabla dependiente de la disciplina (campo 7)
+const CLASIF_ARCH = [
+  ["00","General: leyenda de simbolos, abreviaturas y notas generales"],
+  ["10","Plano de situacion"],
+  ["11","Plano del emplazamiento existente"],
+  ["12","Planos del emplazamiento propuesto"],
+  ["20","Planos de cargas"],
+  ["25","Planos de pilotaje"],
+  ["30","Planos generales"],
+  ["31","Secciones generales"],
+  ["32","Alzados generales"],
+  ["77","Estrategia contra incendios"],
 ];
-const DOCTYPE_STRUCT = [
-  ["00","General: Symbol legend, abbreviations, general notes and 3D views"],
-  ["10","Loading Plans"],
-  ["25","Foundation Plans"],
-  ["30","Superstructure GA Plans"],
-  ["31","RC Superstructure Plans"],
-  ["35","Sections and elevations"],
-  ["40","Interior Areas Development"],
-  ["50","Exterior Areas Development"],
-  ["70","Details"],
-  ["80","Schedules"],
+const CLASIF_STRUCT = [
+  ["00","General: leyenda de simbolos, abreviaturas, notas generales y vistas 3D"],
+  ["10","Planos de cargas"],
+  ["25","Planos de cimentacion"],
+  ["30","Planos generales de superestructura"],
+  ["31","Planos de superestructura de hormigon armado"],
+  ["35","Secciones y alzados"],
+  ["40","Desarrollo de areas interiores"],
+  ["50","Desarrollo de areas exteriores"],
+  ["70","Detalles"],
+  ["80","Cuadros"],
 ];
-const DOCTYPE_CIVIL = [
-  ["00","Site Layouts"],
-  ["01","Existing Conditions"],
-  ["10","Civil Works"],
-  ["20","Underground Combined Services"],
-  ["21","Hydraulic Underground Services"],
-  ["30","Electrical & Others Underground Services"],
-  ["40","Details"],
-  ["50","Typical Sections"],
-  ["60","Longitudinal Sections"],
-  ["70","Schematics and Schedules"],
-  ["80","Others"],
+const CLASIF_CIVIL = [
+  ["00","Planos de implantacion"],
+  ["01","Condiciones existentes"],
+  ["10","Obras civiles"],
+  ["20","Servicios combinados enterrados"],
+  ["21","Servicios hidraulicos enterrados"],
+  ["30","Servicios electricos y otros servicios enterrados"],
+  ["40","Detalles"],
+  ["50","Secciones tipo"],
+  ["60","Secciones longitudinales"],
+  ["70","Esquemas y cuadros"],
+  ["80","Otros"],
 ];
-const DOCTYPE_MEP = [
-  ["00","General: Symbol legend, abbreviations, general notes"],
-  ["01","Plans"],
-  ["02","Plans"],
-  ["03","Sections and elevations"],
-  ["04","Large Scale Drawings (blown up): plans, elevations, sections (NOT details)"],
-  ["05","Details"],
-  ["06","Schedules and Diagrams"],
-  ["09","3D Drawings (isometric, perspective, photos)"],
+const CLASIF_MEP = [
+  ["00","General: leyenda de simbolos, abreviaturas y notas generales"],
+  ["01","Planos"],
+  ["02","Planos"],
+  ["03","Secciones y alzados"],
+  ["04","Planos a gran escala (ampliados): plantas, alzados, secciones (NO detalles)"],
+  ["05","Detalles"],
+  ["06","Cuadros y diagramas"],
+  ["09","Planos 3D (isometricas, perspectivas, fotografias)"],
 ];
 
-// map discipline code -> doctype table. Disciplines not covered by BEP tables -> null
-const DOCTYPE_MAP = {
-  A: DOCTYPE_ARCH,
-  S: DOCTYPE_STRUCT,
-  C: DOCTYPE_CIVIL,
-  M: DOCTYPE_MEP, E: DOCTYPE_MEP, P: DOCTYPE_MEP, F: DOCTYPE_MEP,
+// map discipline code -> clasificacion table. Disciplinas sin tabla en la hoja -> null
+const CLASIF_MAP = {
+  A: CLASIF_ARCH,
+  S: CLASIF_STRUCT,
+  C: CLASIF_CIVIL,
+  M: CLASIF_MEP, E: CLASIF_MEP, P: CLASIF_MEP, F: CLASIF_MEP,
 };
+
+const SUITABILITY = [
+  ["S2","Apto para informacion"],
+  ["S4","Apto para revision de construccion"],
+  ["A1","Emitido para construccion"],
+  ["CR","Conforme a obra (AB)"],
+];
 
 // ---------------- BUILD ----------------
 const $ = id => document.getElementById(id);
 
-function fillSelect(sel, items, {grouped=false}={}){
+function fillSelect(sel, items){
   sel.innerHTML = "";
-  if(grouped){
-    items.forEach(g=>{
-      const og = document.createElement("optgroup");
-      og.label = g.group;
-      g.items.forEach(([code,label])=>{
-        const o = document.createElement("option");
-        o.value = code; o.textContent = `${code} — ${label}`;
-        og.appendChild(o);
-      });
-      sel.appendChild(og);
-    });
-  } else {
-    items.forEach(([code,label])=>{
-      const o = document.createElement("option");
-      o.value = code; o.textContent = `${code} — ${label}`;
-      sel.appendChild(o);
-    });
-  }
+  items.forEach(([code,label])=>{
+    const o = document.createElement("option");
+    o.value = code; o.textContent = `${code} — ${label}`;
+    sel.appendChild(o);
+  });
 }
 
-fillSelect($("f2"), FACILITY);
-fillSelect($("f3"), ZONE);
-fillSelect($("f4"), LEVEL);
-fillSelect($("f5"), INFO_TYPE, {grouped:true});
-fillSelect($("f6"), DISCIPLINE);
+fillSelect($("f1"), PROYECTO);
+fillSelect($("f2"), ORIGINADOR);
+fillSelect($("f3"), FACILITY);
+fillSelect($("f4"), ZONE);
+fillSelect($("f5"), LEVEL);
+fillSelect($("f6"), INFO_TYPE);
+fillSelect($("f7"), DISCIPLINE);
 
-function refreshDocType(){
-  const disc = $("f6").value;
-  const table = DOCTYPE_MAP[disc] || null;
-  const sel = $("f7");
-  const warn = $("f7warn");
+// suitability chips (informational only)
+$("suitRow").innerHTML = SUITABILITY.map(([code,label])=>`<span class="suit-chip"><b>${code}</b> — ${label}</span>`).join("");
+
+function refreshClasif(){
+  const disc = $("f7").value;
+  const table = CLASIF_MAP[disc] || null;
+  const sel = $("f8");
+  const warn = $("f8warn");
   if(table){
     fillSelect(sel, table);
     sel.disabled = false;
@@ -518,7 +621,7 @@ function refreshDocType(){
   } else {
     sel.innerHTML = "";
     const o = document.createElement("option");
-    o.value = "00"; o.textContent = "00 — (sin tabla específica en el BEP)";
+    o.value = "00"; o.textContent = "00 — (sin tabla especifica en la hoja de referencia)";
     sel.appendChild(o);
     warn.classList.add("show");
   }
@@ -526,36 +629,32 @@ function refreshDocType(){
 }
 
 function refreshZoneWarn(){
-  const v = $("f3").value;
-  $("f3warn").classList.toggle("show", v === "P**" || v === "T**");
+  const v = $("f4").value;
+  $("f4warn").classList.toggle("show", v === "P**" || v === "T**");
 }
 
-function labelFor(list, code, grouped=false){
-  if(grouped){
-    for(const g of list){ const hit = g.items.find(i=>i[0]===code); if(hit) return hit[1]; }
-    return "";
-  }
+function labelFor(list, code){
   const hit = list.find(i=>i[0]===code);
   return hit ? hit[1] : "";
 }
 
-function currentDocTypeTable(){
-  return DOCTYPE_MAP[$("f6").value] || [["00","(sin tabla específica en el BEP)"]];
+function currentClasifTable(){
+  return CLASIF_MAP[$("f7").value] || [["00","(sin tabla especifica en la hoja de referencia)"]];
 }
 
 let mode = "all"; // "all" | "drawing"
 
 function applyMode(){
-  const f5 = $("f5");
-  const field5 = $("field5");
+  const f6 = $("f6");
+  const field6 = $("field6");
   if(mode === "drawing"){
-    f5.value = "DR";
-    f5.disabled = true;
-    field5.style.opacity = "0.55";
+    f6.value = "DR";
+    f6.disabled = true;
+    field6.style.opacity = "0.55";
   } else {
-    f5.disabled = false;
-    field5.style.opacity = "1";
-    if(!f5.value) f5.value = "DR";
+    f6.disabled = false;
+    field6.style.opacity = "1";
+    if(!f6.value) f6.value = "DR";
   }
   render();
 }
@@ -570,10 +669,10 @@ document.querySelectorAll(".mode-btn").forEach(btn=>{
 });
 
 function validateNumber(){
-  const val = $("f8").value.replace(/[^0-9]/g,"").slice(0,2);
-  $("f8").value = val;
+  const val = $("f9").value.replace(/[^0-9]/g,"").slice(0,2);
+  $("f9").value = val;
   const ok = val.length === 2;
-  $("f8warn").classList.toggle("show", val.length>0 && !ok);
+  $("f9warn").classList.toggle("show", val.length>0 && !ok);
   return ok ? val : "00";
 }
 
@@ -585,18 +684,20 @@ function render(){
   const f5 = $("f5").value;
   const f6 = $("f6").value;
   const f7 = $("f7").value;
-  const f8raw = $("f8").value.replace(/[^0-9]/g,"").slice(0,2);
-  const f8 = f8raw.length === 2 ? f8raw : (f8raw.length===1 ? f8raw : "00");
+  const f8 = $("f8").value;
+  const f9raw = $("f9").value.replace(/[^0-9]/g,"").slice(0,2);
+  const f9 = f9raw.length === 2 ? f9raw : (f9raw.length===1 ? f9raw : "00");
 
   const parts = [
-    {code:f1, color:"var(--f-campus)"},
-    {code:f2, color:"var(--f-facility)"},
-    {code:f3, color:"var(--f-zone)"},
-    {code:f4, color:"var(--f-level)"},
-    {code:f5, color:"var(--f-info)"},
-    {code:f6, color:"var(--f-disc)"},
-    {code:f7, color:"var(--f-doctype)"},
-    {code:f8, color:"var(--f-number)"},
+    {code:f1, color:"var(--f-id)"},
+    {code:f2, color:"var(--f-id)"},
+    {code:f3, color:"var(--f-id)"},
+    {code:f4, color:"var(--f-zone)"},
+    {code:f5, color:"var(--f-level)"},
+    {code:f6, color:"var(--f-info)"},
+    {code:f7, color:"var(--f-disc)"},
+    {code:f8, color:"var(--f-doctype)"},
+    {code:f9, color:"var(--f-number)"},
   ];
 
   $("codeDisplay").innerHTML = parts.map((p,i)=>{
@@ -606,14 +707,15 @@ function render(){
 
   // legend
   const legendData = [
-    ["var(--f-campus)","Campus", f1, "Campus del proyecto"],
-    ["var(--f-facility)","Facility", f2, labelFor(FACILITY, f2)],
-    ["var(--f-zone)","Zone/Vol.", f3, labelFor(ZONE, f3)],
-    ["var(--f-level)","Level", f4, labelFor(LEVEL, f4)],
-    ["var(--f-info)","Info Type", f5, labelFor(INFO_TYPE, f5, true)],
-    ["var(--f-disc)","Discipline", f6, labelFor(DISCIPLINE, f6)],
-    ["var(--f-doctype)","Doc Type", f7, labelFor(currentDocTypeTable(), f7)],
-    ["var(--f-number)","Number", f8, "Correlativo (00–99)"],
+    ["var(--f-id)","Proyecto", f1, labelFor(PROYECTO, f1)],
+    ["var(--f-id)","Originador", f2, labelFor(ORIGINADOR, f2)],
+    ["var(--f-id)","Edificio", f3, labelFor(FACILITY, f3)],
+    ["var(--f-zone)","Volumen/Zona", f4, labelFor(ZONE, f4)],
+    ["var(--f-level)","Nivel", f5, labelFor(LEVEL, f5)],
+    ["var(--f-info)","Tipo archivo", f6, labelFor(INFO_TYPE, f6)],
+    ["var(--f-disc)","Disciplina", f7, labelFor(DISCIPLINE, f7)],
+    ["var(--f-doctype)","Clasificacion", f8, labelFor(currentClasifTable(), f8)],
+    ["var(--f-number)","Numero", f9, "Correlativo (00–99)"],
   ];
   $("legend").innerHTML = legendData.map(([color,name,code,label])=>`
     <div class="legend-row">
@@ -625,14 +727,14 @@ function render(){
 }
 
 // wire events
-["f1","f2","f3","f4","f5","f6","f7"].forEach(id=>{
+["f1","f2","f3","f4","f5","f6","f7","f8"].forEach(id=>{
   $(id).addEventListener("change", ()=>{
-    if(id==="f6") refreshDocType();
-    if(id==="f3") refreshZoneWarn();
+    if(id==="f7") refreshClasif();
+    if(id==="f4") refreshZoneWarn();
     render();
   });
 });
-$("f8").addEventListener("input", ()=>{ validateNumber(); render(); });
+$("f9").addEventListener("input", ()=>{ validateNumber(); render(); });
 
 $("copyBtn").addEventListener("click", ()=>{
   const text = $("codeDisplay").innerText.replace(/\s+/g,"");
@@ -647,7 +749,7 @@ $("copyBtn").addEventListener("click", ()=>{
 });
 
 // init
-refreshDocType();
+refreshClasif();
 refreshZoneWarn();
 applyMode();
 </script>
