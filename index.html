@@ -78,6 +78,13 @@ h1{font-size:clamp(26px,3.4vw,38px); font-weight:700; margin:0 0 6px; letter-spa
   background:var(--panel); border:1px solid var(--line); border-radius:8px;
 }
 .source-banner b{color:var(--teal);}
+.source-banner{display:block; line-height:1.6;}
+@media (max-width:640px){
+  .wrap{padding:28px 16px 70px;}
+  .panel, .stamp{padding:20px 16px;}
+  .ref-box{text-align:left; min-width:0;}
+  .tab{padding:10px 14px;}
+}
 
 /* ---------- Mode toggle ---------- */
 .mode-row{display:flex; gap:10px; margin-bottom:28px; flex-wrap:wrap;}
@@ -200,6 +207,121 @@ input[type="text"]{cursor:text;}
 }
 .suit-chip b{color:var(--text);}
 
+/* ---------- Tabs (Generador / Traductor) ---------- */
+.tabs{
+  display:flex; gap:4px; margin-bottom:26px; padding:4px;
+  background:var(--panel); border:1px solid var(--line); border-radius:11px; width:fit-content; max-width:100%;
+}
+.tab{
+  font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600;
+  background:transparent; border:none; color:var(--text-dim);
+  padding:10px 20px; border-radius:8px; cursor:pointer; transition:.15s ease;
+  display:flex; align-items:center; gap:8px;
+}
+.tab:hover{color:var(--text);}
+.tab.active{background:var(--panel-2); color:var(--text); box-shadow:inset 0 0 0 1px var(--line);}
+.tab .tab-key{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-faint); font-weight:500;}
+.tab.active .tab-key{color:var(--accent);}
+.view{display:none;}
+.view.active{display:block;}
+
+/* ---------- Traductor ---------- */
+.tr-input-panel{margin-bottom:22px;}
+textarea{
+  width:100%; min-height:96px; resize:vertical; background:#0D1015; border:1px solid var(--line); color:var(--text);
+  font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:600; line-height:1.6;
+  padding:14px 16px; border-radius:10px; transition:.15s ease; letter-spacing:.01em;
+}
+textarea:hover{border-color:var(--text-faint);}
+textarea:focus{border-color:var(--blue); outline:none;}
+textarea::placeholder{color:var(--text-faint); font-weight:400;}
+.tr-help{font-size:12px; color:var(--text-faint); margin-top:10px; line-height:1.5;}
+.tr-examples{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; align-items:center;}
+.tr-examples span.lbl{font-size:11.5px; color:var(--text-faint); font-family:'JetBrains Mono',monospace;}
+.ex-chip{
+  font-family:'JetBrains Mono',monospace; font-size:11px; border:1px solid var(--line);
+  border-radius:6px; padding:5px 9px; color:var(--text-dim); background:var(--panel-2); cursor:pointer; transition:.15s ease;
+}
+.ex-chip:hover{border-color:var(--blue); color:var(--text);}
+
+.tr-summary-bar{
+  display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; font-family:'JetBrains Mono',monospace; font-size:12px;
+}
+.tr-summary-bar .pill{padding:5px 10px; border-radius:6px; border:1px solid var(--line); background:var(--panel); color:var(--text-dim);}
+.tr-summary-bar .pill b{color:var(--text);}
+
+.tr-results{display:flex; flex-direction:column; gap:18px;}
+.tr-card{background:var(--panel); border:1px solid var(--line); border-radius:14px; overflow:hidden;}
+.tr-card.has-error{border-color:var(--accent-dim);}
+.tr-head{padding:20px 24px; position:relative;}
+.tr-head::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background-image: linear-gradient(var(--line-soft) 1px, transparent 1px), linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+  background-size:14px 14px; opacity:.3;
+}
+.tr-head > *{position:relative;}
+.tr-top{display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap; margin-bottom:12px;}
+.tr-code{
+  font-family:'JetBrains Mono',monospace; font-weight:700; font-size:clamp(14px,2vw,19px);
+  line-height:1.5; word-break:break-all;
+}
+.tr-code .seg.bad{text-decoration:underline wavy var(--accent); text-underline-offset:4px;}
+.tr-code .ext{color:var(--text-faint); font-weight:500;}
+.status-badge{
+  font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:.04em;
+  padding:5px 10px; border-radius:6px; white-space:nowrap; flex-shrink:0;
+}
+.status-badge.ok{background:rgba(111,191,115,0.14); color:var(--green); border:1px solid rgba(111,191,115,0.35);}
+.status-badge.warn{background:rgba(224,169,62,0.12); color:var(--amber); border:1px solid rgba(224,169,62,0.35);}
+.status-badge.err{background:var(--accent-glow); color:#F2735C; border:1px solid var(--accent-dim);}
+.tr-sentence{font-size:16px; line-height:1.55; color:var(--text);}
+.tr-sentence .muted{color:var(--text-dim);}
+.tr-notes{margin:12px 0 0; padding-left:18px; display:flex; flex-direction:column; gap:5px;}
+.tr-notes li{font-size:12.5px; line-height:1.5; color:var(--amber);}
+.tr-notes li.err{color:#F2735C;}
+
+.tr-table{border-top:1px solid var(--line);}
+.tr-row{
+  display:grid; grid-template-columns: 26px 130px 78px 1fr auto; gap:12px; align-items:baseline;
+  padding:10px 24px; border-bottom:1px solid var(--line-soft); font-size:13px;
+}
+.tr-row:last-child{border-bottom:none;}
+.tr-row .field-num{align-self:center;}
+.tr-row .fname{color:var(--text-dim); font-weight:500;}
+.tr-row .fcode{font-family:'JetBrains Mono',monospace; font-weight:700;}
+.tr-row .fmeaning{color:var(--text); line-height:1.45;}
+.tr-row .fmeaning small{display:block; color:var(--text-faint); font-size:11.5px; margin-top:2px;}
+.tr-row .fstate{font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600;}
+.fstate.ok{color:var(--green);} .fstate.pattern{color:var(--blue);} .fstate.warn{color:var(--amber);} .fstate.err{color:#F2735C;}
+@media (max-width:640px){
+  .tr-row{grid-template-columns: 22px 1fr auto; padding:10px 16px;}
+  .tr-row .fcode{grid-column:2;}
+  .tr-row .fmeaning{grid-column:1 / -1; padding-left:34px;}
+  .tr-row .fname{grid-column:2;}
+  .tr-row .fstate{grid-column:3; grid-row:1;}
+  .tr-head{padding:18px 16px;}
+}
+details.tr-details summary{
+  list-style:none; cursor:pointer; padding:11px 24px; border-top:1px solid var(--line);
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--text-faint); display:flex; justify-content:space-between; gap:10px;
+}
+details.tr-details summary::-webkit-details-marker{display:none;}
+details.tr-details summary:hover{color:var(--text);}
+details.tr-details summary .chev{transition:.15s ease;}
+details.tr-details[open] summary .chev{transform:rotate(180deg);}
+.tr-actions{display:flex; gap:10px; padding:14px 24px; border-top:1px solid var(--line); flex-wrap:wrap; align-items:center;}
+.ghost-btn{
+  font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600;
+  background:var(--panel-2); border:1px solid var(--line); color:var(--text-dim);
+  padding:8px 14px; border-radius:8px; cursor:pointer; transition:.15s ease;
+}
+.ghost-btn:hover{border-color:var(--blue); color:var(--text);}
+.tr-actions .msg{font-size:12px; color:var(--amber);}
+.tr-empty{
+  border:1px dashed var(--line); border-radius:14px; padding:40px 24px; text-align:center;
+  color:var(--text-faint); font-size:13.5px; line-height:1.6;
+}
+
 footer{
   margin-top:40px; padding-top:20px; border-top:1px solid var(--line);
   font-size:11.5px; color:var(--text-faint); font-family:'JetBrains Mono',monospace;
@@ -213,8 +335,8 @@ footer{
   <header>
     <div>
       <div class="brand-eyebrow"><span class="dot"></span>QTS · Project Rhodes · ESP1</div>
-      <h1>Generador de nomenclatura BIM</h1>
-      <div class="subtitle">Construye nombres de contenedor de información (modelos, planos, documentos) según la convención de 9 campos: la estructura de 8 campos del BEP de QTS, ampliada por Becsa con el campo <b>Originador</b>.</div>
+      <h1>Nomenclatura BIM · Generador y traductor</h1>
+      <div class="subtitle">Construye nombres de contenedor de información (modelos, planos, documentos) según la convención de 9 campos —la estructura de 8 campos del BEP de QTS, ampliada por Becsa con el campo <b>Originador</b>— o pega un nombre existente para saber qué es.</div>
     </div>
     <div class="ref-box">
       <div><b>BEP ref.</b> ESP1-DCZZ-XXX-XX-RP-G-00-04</div>
@@ -224,6 +346,32 @@ footer{
   </header>
 
   <div class="source-banner">📄 Campos y códigos actualizados desde <b>"Naming Convention" (Índice de convención de nombres)</b> — hoja de referencia oficial del proyecto. Ante cualquier código que no aparezca aquí: <b>no inventar</b> — consultar con Control Documental / Oficina Técnica.</div>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" role="tab" data-view="generador"><span class="tab-key">01</span>Generador</button>
+    <button class="tab" role="tab" data-view="traductor"><span class="tab-key">02</span>Traductor</button>
+  </nav>
+
+  <!-- ================= VISTA: TRADUCTOR ================= -->
+  <section class="view" id="view-traductor">
+    <div class="panel tr-input-panel">
+      <div class="panel-title">Nombre a traducir</div>
+      <textarea id="trInput" spellcheck="false" autocomplete="off" placeholder="ESP1-MER-DC01-XXX-XX-ST-G-00-01&#10;(puedes pegar varios nombres, uno por línea)"></textarea>
+      <div class="tr-help">Acepta nombres con extensión (<b>.rvt</b>, <b>.pdf</b>, <b>.ifc</b>…), rutas completas, minúsculas y el formato de 8 campos del BEP de QTS (sin Originador). Si pegas varios nombres, se traducen todos.</div>
+      <div class="tr-examples">
+        <span class="lbl">Ejemplos:</span>
+        <button class="ex-chip" data-ex="ESP1-MER-DC01-XXX-XX-ST-G-00-01">ESP1-MER-DC01-XXX-XX-ST-G-00-01</button>
+        <button class="ex-chip" data-ex="ESP1-BEC-DC01-ZZA-00-DR-A-30-01.pdf">ESP1-BEC-DC01-ZZA-00-DR-A-30-01.pdf</button>
+        <button class="ex-chip" data-ex="ESP1-DCZZ-XXX-XX-RP-G-00-04">BEP (8 campos)</button>
+        <button class="ex-chip" data-ex="esp1-bec-dc02-zzb-01-m3-s-33-1_P01.rvt">Con errores</button>
+      </div>
+    </div>
+    <div id="trSummary"></div>
+    <div class="tr-results" id="trResults"></div>
+  </section>
+
+  <!-- ================= VISTA: GENERADOR ================= -->
+  <section class="view active" id="view-generador">
 
   <div class="mode-row">
     <button class="mode-btn active" data-mode="all">Todos los campos</button>
@@ -326,6 +474,8 @@ footer{
     </div>
 
   </div>
+
+  </section>
 
   <footer>
     <span>Herramienta interna de referencia — no sustituye la consulta del documento de convención de nombres completo.</span>
@@ -752,6 +902,315 @@ $("copyBtn").addEventListener("click", ()=>{
 refreshClasif();
 refreshZoneWarn();
 applyMode();
+
+// =====================================================================
+// ---------------- TABS ----------------
+// =====================================================================
+function showView(name){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.view===name));
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active", v.id==="view-"+name));
+  const hash = name === "generador" ? "" : "#"+name;
+  if(location.hash !== hash){
+    history.replaceState(null, "", location.pathname + location.search + hash);
+  }
+  if(name==="traductor") setTimeout(()=>$("trInput").focus(), 0);
+}
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click", ()=>showView(t.dataset.view)));
+
+// =====================================================================
+// ---------------- TRADUCTOR ----------------
+// =====================================================================
+const esc = s => String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+// Etiquetas genéricas de la hoja ("Nivel n de sotano") -> texto concreto para el código real
+const SPECIFIC = {
+  B1:"Sótano 1", M1:"Entreplanta 1", R1:"Cubierta 1",
+  DC1:"Sala de datos DC1", DH1:"Sala de datos 1", T01:"Zona 1 del arrendatario",
+};
+function exact(list, code){
+  const hit = list.find(i=>i[0]===code);
+  if(!hit) return null;
+  const specific = SPECIFIC[code] && list !== FACILITY ? SPECIFIC[code] : null;
+  return {status:"ok", label: specific || hit[1]};
+}
+const notFound = (what) => ({status:"err", label:"Código no reconocido", note:`No aparece en la lista de ${what} de la hoja de referencia.`});
+const pattern = (label, note) => ({status:"pattern", label, note: note || "Deducido por patrón (no está literal en la hoja). Confírmalo con Control Documental."});
+
+// Cada campo: nombre, color, lista para "cargar en generador" y función de interpretación
+const TR_FIELDS = [
+  { key:"f1", name:"Proyecto", color:"var(--f-id)",
+    read:c => exact(PROYECTO,c) || notFound("proyectos") },
+  { key:"f2", name:"Originador", color:"var(--f-id)",
+    read:c => {
+      const r = exact(ORIGINADOR,c);
+      if(r && c==="YYY") return {...r, status:"warn", note:"Código placeholder — debería sustituirse por el código acordado de la empresa."};
+      return r || {status:"warn", label:"Originador no registrado", note:"No está en la lista. Puede ser otra empresa del proyecto: compruébalo antes de darlo por bueno."};
+    }},
+  { key:"f3", name:"Edificio", color:"var(--f-id)",
+    read:c => {
+      const r = exact(FACILITY,c); if(r) return r;
+      let m;
+      if((m = c.match(/^DC(\d{2})$/))) return pattern(`Edificio ${parseInt(m[1],10)}`, "Sigue el patrón DCxx (Edificio tipo). Confírmalo con Control Documental.");
+      return notFound("edificios / instalaciones");
+    }},
+  { key:"f4", name:"Volumen / Zona", color:"var(--f-zone)",
+    read:c => {
+      const r = exact(ZONE,c); if(r) return r;
+      let m;
+      if((m = c.match(/^DC(\d)$/))) return pattern(`Sala de datos DC${m[1]}`);
+      if((m = c.match(/^DH(\d)$/))) return pattern(`Sala de datos ${m[1]}`);
+      if((m = c.match(/^T(\d{2})$/))) return pattern(`Zona ${parseInt(m[1],10)} del arrendatario`);
+      if((m = c.match(/^CS(\d)$/))) return pattern(`Requisitos del cliente (${m[1]})`);
+      if(/^P[A-Z0-9]{2}$/.test(c)) return {status:"warn", label:`Paquete PIGA "${c.slice(1)}"`, note:"Excepción: el 1er carácter identifica el paquete PIGA, no una zona física."};
+      if(/^T[A-Z0-9]{2}$/.test(c)) return {status:"warn", label:`Paquete de licitación "${c.slice(1)}"`, note:"Excepción: el 1er carácter identifica el paquete de licitación, no una zona física."};
+      return notFound("volúmenes / zonas");
+    }},
+  { key:"f5", name:"Nivel", color:"var(--f-level)",
+    read:c => {
+      const r = exact(LEVEL,c); if(r) return r;
+      let m;
+      if((m = c.match(/^B(\d)$/))) return pattern(`Sótano ${m[1]}`);
+      if((m = c.match(/^M(\d)$/))) return pattern(`Entreplanta ${m[1]}`);
+      if((m = c.match(/^R(\d)$/))) return pattern(`Cubierta ${m[1]}`);
+      if((m = c.match(/^(\d{2})$/))) return pattern(`Planta ${parseInt(m[1],10)}`);
+      return notFound("niveles");
+    }},
+  { key:"f6", name:"Tipo de archivo", color:"var(--f-info)",
+    read:c => exact(INFO_TYPE,c) || notFound("tipos de archivo") },
+  { key:"f7", name:"Disciplina", color:"var(--f-disc)",
+    read:c => exact(DISCIPLINE,c) || notFound("disciplinas") },
+  { key:"f8", name:"Clasificación", color:"var(--f-doctype)",
+    read:(c, ctx) => {
+      if(!/^\d{2}$/.test(c)) return {status:"err", label:"Formato no válido", note:"La clasificación es un código de 2 dígitos."};
+      const table = CLASIF_MAP[ctx.disc];
+      const discName = labelFor(DISCIPLINE, ctx.disc);
+      if(!discName) return {status:"warn", label:"No se puede comprobar", note:"Depende de la disciplina, que no se ha reconocido."};
+      if(!table){
+        return c==="00"
+          ? {status:"ok", label:"Genérico", note:`La disciplina ${ctx.disc} no tiene tabla de clasificación propia; "00" es el código genérico.`}
+          : {status:"warn", label:"Sin tabla para verificar", note:`La disciplina ${ctx.disc} no tiene tabla de clasificación; lo habitual es "00".`};
+      }
+      const r = exact(table,c); if(r) return r;
+      return {status:"err", label:"Código no reconocido", note:`No existe en la tabla de clasificación de ${ctx.disc} (${discName}).`};
+    }},
+  { key:"f9", name:"Número", color:"var(--f-number)",
+    read:c => /^\d{2}$/.test(c)
+      ? {status:"ok", label:`Nº ${c}`, note:"Correlativo dentro del subgrupo de clasificación."}
+      : {status:"err", label:"Formato no válido", note:"Debe ser numérico de 2 dígitos (00–99)."} },
+];
+
+const STATE_TXT = {ok:"✓ OK", pattern:"≈ patrón", warn:"! revisar", err:"✗ error"};
+
+function parseName(raw){
+  const notes = [];
+  let s = raw.trim().replace(/^["'`]+|["'`]+$/g,"");
+  s = s.split(/[\\/]/).pop();                       // quitar ruta
+  let ext = "";
+  const mExt = s.match(/\.([A-Za-z0-9]{2,5})$/);
+  if(mExt){ ext = "."+mExt[1].toLowerCase(); s = s.slice(0,-mExt[0].length); }
+  if(s !== s.toUpperCase()){ notes.push({t:"warn", m:"El nombre tiene minúsculas — la convención usa mayúsculas."}); s = s.toUpperCase(); }
+  if(/\s/.test(s)){ notes.push({t:"warn", m:"Contiene espacios — se han ignorado."}); s = s.replace(/\s+/g,""); }
+
+  // Sufijo tipo revisión pegado al número: ..._P01, ..._C02, ...-01 (1)
+  let suffix = "";
+  const mSuf = s.match(/^(.*?)([_.(].*)$/);
+  if(mSuf && mSuf[1].includes("-")){
+    suffix = mSuf[2]; s = mSuf[1];
+    if(/^[_.]?[PCAS]\d{1,2}/.test(suffix)) notes.push({t:"err", m:`Sufijo "${suffix}" — parece una revisión. La revisión y el status no van en el nombre, se gestionan en el CDE y el cajetín.`});
+    else notes.push({t:"err", m:`Texto extra "${suffix}" al final — no forma parte de la convención.`});
+  }
+  if(s.includes("_") && !s.includes("-")){
+    notes.push({t:"err", m:"Usa guiones bajos como separador — la convención usa un único guion (-)."});
+    s = s.replace(/_+/g,"-");
+  }
+  if(/--/.test(s)){ notes.push({t:"err", m:"Hay guiones dobles (campo vacío)."}); }
+
+  let parts = s.split("-");
+  let bep8 = false;
+  if(parts.length === 8){
+    bep8 = true;
+    parts = [parts[0], null, ...parts.slice(1)];
+    notes.push({t:"warn", m:"Formato de 8 campos (BEP de QTS original): falta el campo Originador que añade Becsa."});
+  } else if(parts.length !== 9){
+    notes.push({t:"err", m:`Se esperaban 9 bloques y hay ${parts.length}. La interpretación de los campos puede estar desplazada.`});
+  }
+  const extra = parts.length > 9 ? parts.slice(9) : [];
+
+  const ctx = {disc: parts[6] || ""};
+  const fields = TR_FIELDS.map((f,i)=>{
+    const code = parts[i];
+    if(code === null) return {...f, code:"—", res:{status:"warn", label:"No incluido", note:"El formato BEP de 8 campos no lleva Originador."}};
+    if(code === undefined || code === "") return {...f, code:"···", res:{status:"err", label:"Falta el campo"}};
+    return {...f, code, res:f.read(code, ctx)};
+  });
+
+  return {raw, ext, suffix, fields, extra, notes, bep8};
+}
+
+function sentenceFor(p){
+  const F = Object.fromEntries(p.fields.map(f=>[f.key, f]));
+  const L = k => (F[k].res.status==="err" || F[k].res.status==="warn" && /^(No |Sin |Falta|Origin)/.test(F[k].res.label)) ? null : F[k].res.label;
+  const pieces = [];
+  const tipo = L("f6"), disc = L("f7"), clas = L("f8");
+  let lead = tipo ? `<b>${esc(tipo)}</b>` : `<span class="muted">Documento de tipo desconocido</span>`;
+  if(disc) lead += ` · ${esc(disc)}`;
+  if(clas && clas!=="Genérico") lead += ` · ${esc(clas)}`;
+  pieces.push(lead + ".");
+  const where = [L("f3"), L("f4"), L("f5")].filter(Boolean).map(esc);
+  if(where.length) pieces.push(`<span class="muted">${where.join(" · ")}.</span>`);
+  const num = /^\d{2}$/.test(F.f9.code) ? `Nº ${F.f9.code}` : null;
+  const orig = L("f2");
+  const tail = [num, orig ? `emitido por ${esc(orig)}` : null].filter(Boolean).join(", ");
+  if(tail) pieces.push(`<span class="muted">${tail.charAt(0).toUpperCase()+tail.slice(1)}.</span>`);
+  return pieces.join(" ");
+}
+
+function overallStatus(p){
+  const st = p.fields.map(f=>f.res.status).concat(p.notes.map(n=>n.t==="err"?"err":"warn"));
+  if(p.extra.length) st.push("err");
+  if(st.includes("err")) return ["err","✗ No cumple"];
+  if(st.includes("warn") || st.includes("pattern")) return ["warn","! Revisar"];
+  return ["ok","✓ Correcto"];
+}
+
+function cardHTML(p, idx, open){
+  const [st, stTxt] = overallStatus(p);
+  const codeHTML = p.fields.map((f,i)=>{
+    const bad = f.res.status==="err" ? " bad" : "";
+    const sep = i < p.fields.length-1 ? '<span class="seg-sep">-</span>' : '';
+    return `<span class="seg${bad}" style="color:${f.color}">${esc(f.code)}</span>${sep}`;
+  }).join("")
+  + (p.extra.length ? `<span class="seg-sep">-</span><span class="seg bad" style="color:var(--text-dim)">${esc(p.extra.join("-"))}</span>` : "")
+  + (p.suffix ? `<span class="seg bad" style="color:var(--text-dim)">${esc(p.suffix)}</span>` : "")
+  + (p.ext ? `<span class="ext">${esc(p.ext)}</span>` : "");
+
+  const notesHTML = p.notes.length
+    ? `<ul class="tr-notes">${p.notes.map(n=>`<li class="${n.t==="err"?"err":""}">${esc(n.m)}</li>`).join("")}</ul>` : "";
+
+  const rows = p.fields.map((f,i)=>`
+    <div class="tr-row">
+      <span class="field-num" style="background:${f.color}">${i+1}</span>
+      <span class="fname">${esc(f.name)}</span>
+      <span class="fcode" style="color:${f.color}">${esc(f.code)}</span>
+      <span class="fmeaning">${esc(f.res.label)}${f.res.note?`<small>${esc(f.res.note)}</small>`:""}</span>
+      <span class="fstate ${f.res.status}">${STATE_TXT[f.res.status]}</span>
+    </div>`).join("");
+
+  return `
+  <article class="tr-card ${st==="err"?"has-error":""}">
+    <div class="tr-head">
+      <div class="tr-top">
+        <div class="tr-code">${codeHTML}</div>
+        <span class="status-badge ${st}">${stTxt}</span>
+      </div>
+      <div class="tr-sentence">${sentenceFor(p)}</div>
+      ${notesHTML}
+    </div>
+    <details class="tr-details" ${open?"open":""}>
+      <summary><span>Desglose campo a campo</span><span class="chev">▾</span></summary>
+      <div class="tr-table">${rows}</div>
+      <div class="tr-actions">
+        <button class="ghost-btn" data-load="${idx}">Abrir en el generador →</button>
+        <button class="ghost-btn" data-copy="${idx}">Copiar nombre limpio</button>
+        <span class="msg" id="trMsg${idx}"></span>
+      </div>
+    </details>
+  </article>`;
+}
+
+let trParsed = [];
+
+function translate(){
+  const lines = $("trInput").value.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+  trParsed = lines.map(parseName);
+  if(!trParsed.length){
+    $("trSummary").innerHTML = "";
+    $("trResults").innerHTML = `<div class="tr-empty">Pega un nombre de archivo arriba y verás qué es cada bloque.<br>También puedes pegar una lista entera (por ejemplo, copiada de una carpeta o de un listado de entregables).</div>`;
+    return;
+  }
+  const single = trParsed.length === 1;
+  if(!single){
+    const c = {ok:0, warn:0, err:0};
+    trParsed.forEach(p=>c[overallStatus(p)[0]]++);
+    $("trSummary").innerHTML = `<div class="tr-summary-bar">
+      <span class="pill"><b>${trParsed.length}</b> nombres</span>
+      <span class="pill" style="color:var(--green)"><b>${c.ok}</b> correctos</span>
+      <span class="pill" style="color:var(--amber)"><b>${c.warn}</b> a revisar</span>
+      <span class="pill" style="color:#F2735C"><b>${c.err}</b> no cumplen</span></div>`;
+  } else {
+    $("trSummary").innerHTML = "";
+  }
+  $("trResults").innerHTML = trParsed.map((p,i)=>cardHTML(p, i, single)).join("");
+}
+
+function cleanName(p){
+  return p.fields.map(f=>f.code).filter(c=>c && c!=="—" && c!=="···").join("-");
+}
+
+function loadIntoGenerator(p, idx){
+  // Volver a modo "todos los campos" para que el tipo de archivo sea editable
+  mode = "all";
+  document.querySelectorAll(".mode-btn").forEach(b=>b.classList.toggle("active", b.dataset.mode==="all"));
+  applyMode();
+
+  const failed = [];
+  const setSel = (id, code, name) => {
+    const sel = $(id);
+    if([...sel.options].some(o=>o.value===code)){ sel.value = code; }
+    else failed.push(name);
+  };
+  const F = p.fields;
+  setSel("f1", F[0].code, "Proyecto");
+  if(F[1].code !== "—") setSel("f2", F[1].code, "Originador"); else failed.push("Originador");
+  setSel("f3", F[2].code, "Edificio");
+  setSel("f4", F[3].code, "Volumen/Zona");
+  setSel("f5", F[4].code, "Nivel");
+  setSel("f6", F[5].code, "Tipo de archivo");
+  setSel("f7", F[6].code, "Disciplina");
+  refreshClasif();                       // regenera la tabla de clasificación según disciplina
+  setSel("f8", F[7].code, "Clasificación");
+  $("f9").value = /^\d{2}$/.test(F[8].code) ? F[8].code : "";
+  if(!/^\d{2}$/.test(F[8].code)) failed.push("Número");
+  validateNumber();
+  refreshZoneWarn();
+  render();
+
+  if(failed.length){
+    $("trMsg"+idx).textContent = `No se pudieron cargar: ${failed.join(", ")} (código fuera de las listas). Revísalos en el generador.`;
+    setTimeout(()=>showView("generador"), 1800);
+  } else {
+    showView("generador");
+  }
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+$("trResults").addEventListener("click", e=>{
+  const load = e.target.closest("[data-load]");
+  const copy = e.target.closest("[data-copy]");
+  if(load){ const i=+load.dataset.load; loadIntoGenerator(trParsed[i], i); }
+  if(copy){
+    const i=+copy.dataset.copy;
+    navigator.clipboard.writeText(cleanName(trParsed[i])).then(()=>{
+      const prev = copy.textContent; copy.textContent = "✓ Copiado";
+      setTimeout(()=>copy.textContent = prev, 1400);
+    });
+  }
+});
+
+let trTimer;
+$("trInput").addEventListener("input", ()=>{ clearTimeout(trTimer); trTimer = setTimeout(translate, 120); });
+document.querySelectorAll(".ex-chip").forEach(b=>b.addEventListener("click", ()=>{
+  $("trInput").value = b.dataset.ex; translate(); $("trInput").focus();
+}));
+
+// Enlace directo: index.html#traductor  o  index.html?n=ESP1-MER-...  (abre el traductor ya relleno)
+(function initRoute(){
+  const n = new URLSearchParams(location.search).get("n");
+  if(n){ $("trInput").value = n; }
+  translate();
+  if(n || location.hash === "#traductor") showView("traductor");
+})();
+window.addEventListener("hashchange", ()=>showView(location.hash==="#traductor" ? "traductor" : "generador"));
 </script>
 </body>
 </html>
